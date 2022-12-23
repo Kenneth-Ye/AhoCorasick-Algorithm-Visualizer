@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/KMP-Algorithm-Visualizer/static/css/main.dae735ed.css",
+    "main.js": "/KMP-Algorithm-Visualizer/static/js/main.34a7c61d.js",
+    "static/js/787.35bc8beb.chunk.js": "/KMP-Algorithm-Visualizer/static/js/787.35bc8beb.chunk.js",
+    "index.html": "/KMP-Algorithm-Visualizer/index.html",
+    "main.dae735ed.css.map": "/KMP-Algorithm-Visualizer/static/css/main.dae735ed.css.map",
+    "main.34a7c61d.js.map": "/KMP-Algorithm-Visualizer/static/js/main.34a7c61d.js.map",
+    "787.35bc8beb.chunk.js.map": "/KMP-Algorithm-Visualizer/static/js/787.35bc8beb.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.dae735ed.css",
+    "static/js/main.34a7c61d.js"
+  ]
+}
