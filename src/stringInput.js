@@ -51,6 +51,7 @@ const UserInput = () => {
 
   function getData(event) {
     setStr(event.target.value);
+    console.log(str);
   }
 
   function handleSubmit(e) {
