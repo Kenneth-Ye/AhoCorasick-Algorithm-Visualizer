@@ -43,11 +43,14 @@ import { useState } from 'react';
 import React from 'react';
 import './App.css';
 import StringsUnique from './stringsUnique';
+let substringArr=[];
+let uniqBool = true
 
 const UserInput = () => {
   const [str, setStr] = useState("");
   const [substrings, setSubstrings] = useState([]);
   const [unique, setUnique] = useState(true);
+
 
   function getData(event) {
     setStr(event.target.value);
@@ -59,20 +62,23 @@ const UserInput = () => {
     strUnique();
 
     console.log(unique);
-    if (!unique) {
+    if (!uniqBool) {
         return;
     }
     //const interimList = [...substrings, str];
     setSubstrings([...substrings, str]);
-    console.log(substrings);
+    substringArr.push(str)
+    console.log(substringArr);
   }
 
   function strUnique() {
-    if (substrings.includes(str)) {
+    if (substringArr.includes(str)) {
         setUnique(false);
+        uniqBool = false
     }
     else {
         setUnique(true);
+        uniqBool = true
     }
   }
 
@@ -82,6 +88,7 @@ const UserInput = () => {
 
     // remove the word from the array
     substrings.splice(index, 1);
+    substringArr.splice(index, 1);
 
     // update the state with the new array
     setSubstrings([...substrings]);
