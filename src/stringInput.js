@@ -1,55 +1,18 @@
 import { useState } from 'react';
-// import './App.css';
-
-// const UserInput = () => {
-
-//     const [str, setStr] = useState("");
-//     const [substrings, setSubstrings] = useState([]);
-
-//     function getData(event) {
-//         setStr(event.target.value);
-//     }
-
-//     function handleSubmit(e) {
-//         e.preventDefault();
-//         const interimList = [...substrings, str]
-//         setSubstrings(interimList);
-//         console.log(substrings)
-//     }
-
-//     return (  
-//         <div className="inputArea">
-//             <form className="substringForm">
-//                 <label>Enter Substrings </label>
-//                 <input type="text" onChange={getData}/> 
-//                 <button type="inputButton" onClick={ handleSubmit}>Add</button>
-//             </form>
-
-//             <div className='substrings'>
-//                 {substrings.map((string, index) => (
-//                     <h1 className='substringText' key={index}> {string} </h1>
-//                 ))}
-//             </div>
-//         </div>
-//     ); 
-// }
- 
-// export default UserInput;
 
 
-
-
-//UNIQUE VERSION
 import React from 'react';
 import './App.css';
 import StringsUnique from './stringsUnique';
+import EmptyString from './emptyStringError';
 let substringArr=[];
-let uniqBool = true
+
 
 const UserInput = () => {
   const [str, setStr] = useState("");
   const [substrings, setSubstrings] = useState([]);
   const [unique, setUnique] = useState(true);
+  const [empty, setEmpty] = useState(false);
 
 
   function getData(event) {
@@ -59,28 +22,33 @@ const UserInput = () => {
 
   function handleSubmit(e) {
     e.preventDefault();
-    strUnique();
-
-    console.log(unique);
-    if (!uniqBool) {
-        return;
+    //ensure input is not an empty string
+    if (str === "") {
+      setEmpty(true);
+      return;
     }
+    else {
+      setEmpty(false);
+    }
+    
+
+    //check to see if input is unique
+    if (substringArr.includes(str)) {
+      setUnique(false);
+      return;
+    }
+    else {
+      setUnique(true);
+    }
+
     //const interimList = [...substrings, str];
     setSubstrings([...substrings, str]);
     substringArr.push(str)
     console.log(substringArr);
   }
 
-  function strUnique() {
-    if (substringArr.includes(str)) {
-        setUnique(false);
-        uniqBool = false
-    }
-    else {
-        setUnique(true);
-        uniqBool = true
-    }
-  }
+
+
 
   function deleteWord(word) {
     // find the index of the word in the array
@@ -94,7 +62,7 @@ const UserInput = () => {
     setSubstrings([...substrings]);
 
     // find the div that contains the word and remove it
-    const div = document.querySelector(`div:contains(${word})`);
+    const div = document.querySelector(index);
     div.remove();
   }
 
@@ -107,11 +75,11 @@ const UserInput = () => {
           Add
         </button>
       </form>
-
+      <EmptyString showError = {empty}/>
       <StringsUnique  divVisible ={unique}/> 
       <div className="substrings">
         {substrings.map((string, index) => (
-          <h1 className="substringText" key={index}>
+          <h1 className="substringText" key={string}>
             {string}{" "}
             <button type="button" onClick={() => deleteWord(string)}>
               X
