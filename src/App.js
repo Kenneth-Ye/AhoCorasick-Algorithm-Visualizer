@@ -1,6 +1,6 @@
 import './App.css';
-import UserInput from "./stringInput";
-import MainStringInput from './mainStringAlgo';
+import UserInput from "./stringInput"; //section where users input the substrings 
+import MainStringInput from './mainStringAlgo'; //section where users input the mainstring
 
 
 function App() {
