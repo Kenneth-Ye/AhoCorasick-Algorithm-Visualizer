@@ -1,14 +1,16 @@
 import { useState } from 'react';
-
-
 import React from 'react';
 import './App.css';
+
+//components that warn user if string entered is not unique or empty
 import StringsUnique from './stringsUnique';
 import EmptyString from './emptyStringError';
-let substringArr=[];
 
+let substringArr=[]; //substring array var
 
 const UserInput = () => {
+
+  //hooks
   const [str, setStr] = useState("");
   const [substrings, setSubstrings] = useState([]);
   const [unique, setUnique] = useState(true);
@@ -16,12 +18,16 @@ const UserInput = () => {
 
 
   function getData(event) {
+    //update the str hook as user types into the field
     setStr(event.target.value);
     console.log(str);
   }
 
   function handleSubmit(e) {
+
+    //prevent refresh
     e.preventDefault();
+
     //ensure input is not an empty string
     if (str === "") {
       setEmpty(true);
@@ -41,7 +47,7 @@ const UserInput = () => {
       setUnique(true);
     }
 
-    //const interimList = [...substrings, str];
+    //add the string to the list of substrings
     setSubstrings([...substrings, str]);
     substringArr.push(str)
     console.log(substringArr);
@@ -77,7 +83,9 @@ const UserInput = () => {
       </form>
       <EmptyString showError = {empty}/>
       <StringsUnique  divVisible ={unique}/> 
-      <div className="substrings">
+
+      {/* map the substring array to show users what substrings they have already inputted */}
+      <div className="substrings"> 
         {substrings.map((string, index) => (
           <h1 className="substringText" key={string}>
             {string}{" "}
