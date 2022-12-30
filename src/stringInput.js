@@ -31,7 +31,7 @@ const UserInput = () => {
     //ensure input is not an empty string
     if (str === "") {
       setEmpty(true);
-      return;
+      return; //if string is empty do not add to array
     }
     else {
       setEmpty(false);
@@ -41,7 +41,7 @@ const UserInput = () => {
     //check to see if input is unique
     if (substringArr.includes(str)) {
       setUnique(false);
-      return;
+      return; //if not unique do not add to array
     }
     else {
       setUnique(true);
@@ -49,6 +49,8 @@ const UserInput = () => {
 
     //add the string to the list of substrings
     setSubstrings([...substrings, str]);
+    
+    //update variable for substr array
     substringArr.push(str)
     console.log(substringArr);
   }
