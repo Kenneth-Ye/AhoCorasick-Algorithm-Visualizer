@@ -12,7 +12,9 @@
     "react-dom": "^18.2.0",
     "react-scripts": "^5.0.1",
     "save-dev": "^0.0.1-security",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "d3": "^5.7.0",
+    "dagre-d3": "^0.6.1"
   },
   "scripts": {
     "predeploy": "npm run build",
