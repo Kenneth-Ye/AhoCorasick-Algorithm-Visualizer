@@ -1,8 +1,10 @@
+import './App.css';
+
 const EmptyString = (props) => {
     const {showError} = props;
     if (showError) {
         return (
-            <div>
+            <div className="emptyWarning">
                 No Empty Strings!
             </div>
         )
