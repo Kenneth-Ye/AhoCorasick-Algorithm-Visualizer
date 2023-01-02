@@ -22,7 +22,7 @@
 
 .substringForm {
   text-align: left;
-  margin-left: 20px;
+  margin-left: 50px;
   font-size: 22px;
   font-family: 'Noto Serif Khojki', serif;
   font-weight:700;
@@ -47,4 +47,14 @@
 
 .mainstring {
   flex: 1;
+}
+
+.uniqueWarning {
+  text-align: left;
+  margin-left: 110px;
+}
+
+.emptyWarning {
+  text-align: left;
+  margin-left: 110px;
 }
