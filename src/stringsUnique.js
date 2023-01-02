@@ -10,13 +10,14 @@ const StringsUnique = (props) => {
     }
 
     return (
-        <div>
+        <div className='uniqueWarning'>
             Substrings must be unique!
         </div>
     );
 }
 
 export default StringsUnique;
+
 
 
 
