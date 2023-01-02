@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import React from 'react';
 import './App.css';
+import MainStringInput from './mainStringAlgo';
+import Automaton from './ahoAutomaton';
 
 //components that warn user if string entered is not unique or empty
 import StringsUnique from './stringsUnique';
@@ -15,6 +17,7 @@ const UserInput = () => {
   const [substrings, setSubstrings] = useState([]);
   const [unique, setUnique] = useState(true);
   const [empty, setEmpty] = useState(false);
+  const [mainstring, setMainstring] = useState("");
 
 
   function getData(event) {
@@ -40,8 +43,8 @@ const UserInput = () => {
 
     //check to see if input is unique
     if (substringArr.includes(str)) {
-      setUnique(false);
-      return; //if not unique do not add to array
+      setUnique(false); //if not unique do not add to array
+      return;
     }
     else {
       setUnique(true);
@@ -49,8 +52,6 @@ const UserInput = () => {
 
     //add the string to the list of substrings
     setSubstrings([...substrings, str]);
-    
-    //update variable for substr array
     substringArr.push(str)
     console.log(substringArr);
   }
@@ -74,15 +75,24 @@ const UserInput = () => {
     div.remove();
   }
 
+  function keyPress(event) {
+    return (event.charCode > 64 && event.charCode < 91) || (event.charCode > 96 && event.charCode < 123)
+  }
+
   return (
     <div className="inputArea">
-      <form className="substringForm">
-        <label>Enter Substrings </label>
-        <input type="text" onChange={getData} />
-        <button type="inputButton" onClick={handleSubmit}>
-          Add
-        </button>
-      </form>
+      <div className='flex'>
+        <form className="substringForm">
+          <label>Enter Substrings </label>
+          <input type="text" onChange={getData} onKeyPress = {keyPress} />
+          <button type="inputButton" onClick={handleSubmit}>
+            Add
+          </button>
+        </form>
+
+        <MainStringInput setMainstring={setMainstring}/>
+      </div>
+
       <EmptyString showError = {empty}/>
       <StringsUnique  divVisible ={unique}/> 
 
@@ -97,6 +107,7 @@ const UserInput = () => {
           </h1>
         ))}
       </div>
+      <Automaton mainstring={mainstring} substrings={substrings}/>
     </div>
   );
 };
