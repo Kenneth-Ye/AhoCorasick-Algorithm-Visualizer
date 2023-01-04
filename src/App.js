@@ -11,7 +11,7 @@ function App() {
     <div className="App">
       <header className="App-header">
         <h1>
-          KMP Algorithm Visualizer
+          Aho-Corasick Algorithm Visualizer
         </h1>
         <div className='in'>
           <UserInput/>
