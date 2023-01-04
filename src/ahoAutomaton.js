@@ -114,14 +114,32 @@ const Automaton = ({substrings, mainstring}) => {
                     minNode = match;
                 }
             }
-
-            failureEdges[node] = minNode;
+            
+            
+            failureEdges[parseInt(node)] = parseInt(minNode);
         }
         console.log(failureEdges);
         return failureEdges;
     }
 
-    
+    function buildDictionaryLinks(nodeObj, failureLinks, output) {
+        let dictionaryLinks = {};
+        let curr;
+
+        for (let node in nodeObj) {
+            curr = node
+            while (curr != 0) {
+                if (curr in output && curr != node) {
+                    dictionaryLinks[parseInt(node)] = curr;
+                    break;
+                }
+                curr = failureLinks[curr]; 
+            }
+        }
+        console.log(dictionaryLinks);
+    }
+
+
 
 
 
