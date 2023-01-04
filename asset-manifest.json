@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/KMP-Algorithm-Visualizer/static/css/main.42f274c0.css",
-    "main.js": "/KMP-Algorithm-Visualizer/static/js/main.e67d29b6.js",
-    "static/js/787.35bc8beb.chunk.js": "/KMP-Algorithm-Visualizer/static/js/787.35bc8beb.chunk.js",
-    "index.html": "/KMP-Algorithm-Visualizer/index.html",
-    "main.42f274c0.css.map": "/KMP-Algorithm-Visualizer/static/css/main.42f274c0.css.map",
-    "main.e67d29b6.js.map": "/KMP-Algorithm-Visualizer/static/js/main.e67d29b6.js.map",
-    "787.35bc8beb.chunk.js.map": "/KMP-Algorithm-Visualizer/static/js/787.35bc8beb.chunk.js.map"
+    "main.css": "/AhoCorasick-Algorithm-Visualizer/static/css/main.42f274c0.css",
+    "main.js": "/AhoCorasick-Algorithm-Visualizer/static/js/main.ea829f0f.js",
+    "static/js/787.35bc8beb.chunk.js": "/AhoCorasick-Algorithm-Visualizer/static/js/787.35bc8beb.chunk.js",
+    "index.html": "/AhoCorasick-Algorithm-Visualizer/index.html",
+    "main.42f274c0.css.map": "/AhoCorasick-Algorithm-Visualizer/static/css/main.42f274c0.css.map",
+    "main.ea829f0f.js.map": "/AhoCorasick-Algorithm-Visualizer/static/js/main.ea829f0f.js.map",
+    "787.35bc8beb.chunk.js.map": "/AhoCorasick-Algorithm-Visualizer/static/js/787.35bc8beb.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.42f274c0.css",
-    "static/js/main.e67d29b6.js"
+    "static/js/main.ea829f0f.js"
   ]
 }
