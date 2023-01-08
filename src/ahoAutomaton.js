@@ -1,3 +1,7 @@
+import React from 'react';
+import { useRef, useEffect } from 'react';
+import { select } from 'd3';
+
 const Automaton = ({substrings, mainstring}) => {
     var wordFound =  {}; // nodes at which a substring is found
     var nodeStrings = {
@@ -7,6 +11,19 @@ const Automaton = ({substrings, mainstring}) => {
     // var nodeDepth = {
 
     // }
+
+    function getMaxDepth(substrings) {
+        substrings.sort(function(a, b){return b.length - a.length}); 
+        return substrings[0].length;
+    }
+
+    function objectFlip(obj) {
+        const ret = {};
+        Object.keys(obj).forEach(key => {
+          ret[obj[key]] = key;
+        });
+        return ret;
+      }
 
     //function to preprocess the substrings 
     function buildTrie(substrings) {
@@ -139,6 +156,44 @@ const Automaton = ({substrings, mainstring}) => {
         console.log(dictionaryLinks);
     }
 
+    function inverse(obj, target){
+        for (let node in obj){
+          if (obj[node] == target) {
+            return node;
+          }
+       }
+    }
+
+    function convertData(nodeObj, obj, nodeStrings) {
+        //initialize an object
+        let hierarchObj = {};
+
+        //add a name for the node
+        hierarchObj.name = nodeStrings[obj];
+        let index = obj;
+        
+        //base case is a leaf node
+        if (Object.keys(nodeObj[index]).length == 0){
+            return hierarchObj;
+        }
+
+        //otherwise loop for each child node
+        for (let node in nodeObj[obj]){
+            
+          //if children key doesnt exist initialize an array for it
+          if (!("children" in hierarchObj)) {
+                hierarchObj.children = [];
+          }
+
+          //recurse over the child node
+            hierarchObj.children.push(
+              convertData(nodeObj, inverse(nodeStrings, node), nodeStrings)
+            );
+        };
+        console.log(hierarchObj);
+        return hierarchObj;
+      }
+
 
 
 
@@ -152,3 +207,6 @@ const Automaton = ({substrings, mainstring}) => {
 }
 
 export default Automaton;
+
+
+
