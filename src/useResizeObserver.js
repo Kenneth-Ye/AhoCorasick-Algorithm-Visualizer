@@ -1,4 +1,5 @@
-//import resize observer component from github
+//import resize observer component from github, not my code
+//imported from https://github.com/muratkemaldar
 
 import ResizeObserver from "resize-observer-polyfill";
 import { useState, useEffect } from 'react';
