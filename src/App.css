@@ -23,7 +23,7 @@
 .substringForm {
   text-align: left;
   margin-left: 50px;
-  font-size: 22px;
+  font-size: 25px;
   font-family: 'Noto Serif Khojki', serif;
   font-weight:700;
 }
@@ -34,6 +34,7 @@
   margin-top: 0px;
   margin-bottom: 0px; 
   font-size: 9px;
+  display: flex;
 }
 
 .substringText {
@@ -47,6 +48,8 @@
 
 .mainstring {
   flex: 1;
+  margin-bottom: 0px;
+  padding-bottom: 0px;
 }
 
 .uniqueWarning {
@@ -57,4 +60,49 @@
 .emptyWarning {
   text-align: left;
   margin-left: 110px;
+}
+
+.mainInputArea {
+  flex: 2;
+}
+
+.mainInput {
+  flex: 2;
+  font-size: 24px;
+  text-align: left;
+  margin-left: 620px;
+  margin-top: 0px;
+}
+
+.substringsText {
+  flex: 1;
+}
+
+.visualizeButton {
+  margin-top: 0px;
+  font-size: 20px;
+  padding: 10px 24px;
+  margin-bottom: 40px;
+  background-color: #008CBA;
+  border: 2px solid #008CBA;
+}
+
+.mainstringEmpty {
+  margin-left: 300px;
+}
+
+.emptySub {
+  text-align: left;
+  margin-left: 110px;
+}
+
+svg {
+  margin-left: 340px;
+  overflow: visible;
+  display: block;
+  width: 100%;
+}
+
+.svgDiv {
+  padding-bottom: 1000px;
 }
