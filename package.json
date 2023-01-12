@@ -44,7 +44,8 @@
     ]
   },
   "devDependencies": {
-    "gh-pages": "^4.0.0"
+    "gh-pages": "^4.0.0",
+    "resize-observer-polyfill": "^1.5.1"
   }
 }
 
