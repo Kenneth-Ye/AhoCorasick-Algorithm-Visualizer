@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/AhoCorasick-Algorithm-Visualizer/static/css/main.dd0bdd1f.css",
-    "main.js": "/AhoCorasick-Algorithm-Visualizer/static/js/main.0ab61697.js",
+    "main.js": "/AhoCorasick-Algorithm-Visualizer/static/js/main.2c29ec3b.js",
     "static/js/787.35bc8beb.chunk.js": "/AhoCorasick-Algorithm-Visualizer/static/js/787.35bc8beb.chunk.js",
     "index.html": "/AhoCorasick-Algorithm-Visualizer/index.html",
     "main.dd0bdd1f.css.map": "/AhoCorasick-Algorithm-Visualizer/static/css/main.dd0bdd1f.css.map",
-    "main.0ab61697.js.map": "/AhoCorasick-Algorithm-Visualizer/static/js/main.0ab61697.js.map",
+    "main.2c29ec3b.js.map": "/AhoCorasick-Algorithm-Visualizer/static/js/main.2c29ec3b.js.map",
     "787.35bc8beb.chunk.js.map": "/AhoCorasick-Algorithm-Visualizer/static/js/787.35bc8beb.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.dd0bdd1f.css",
-    "static/js/main.0ab61697.js"
+    "static/js/main.2c29ec3b.js"
   ]
 }
