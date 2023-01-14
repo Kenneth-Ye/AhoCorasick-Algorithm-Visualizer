@@ -2,37 +2,40 @@ import { useState } from 'react';
 import React from 'react';
 import './App.css';
 import MainStringInput from './mainStringAlgo';
-import Automaton from './ahoAutomaton';
+import TrieVisual from './d3visualization';
 
 //components that warn user if string entered is not unique or empty
 import StringsUnique from './stringsUnique';
 import EmptyString from './emptyStringError';
 
-let substringArr=[]; //substring array var
+
+ let substringArr=["main", "string", "ring", "aim"]; //substring array var
+//let substringArr=["she","hers","his","he"];
 
 const UserInput = () => {
 
   //hooks
-  const [str, setStr] = useState("");
-  const [substrings, setSubstrings] = useState([]);
+  const [substrings, setSubstrings] = useState(["she","hers","his","he"]);
   const [unique, setUnique] = useState(true);
   const [empty, setEmpty] = useState(false);
-  const [mainstring, setMainstring] = useState("");
-
+  const [mainstring, setMainstring] = useState("Mainstring");
+  const [str, setStr] = useState("");
 
   function getData(event) {
     //update the str hook as user types into the field
+    //setStr(event.target.value);
     setStr(event.target.value);
     console.log(str);
   }
 
   function handleSubmit(e) {
-
+    console.log(str);
     //prevent refresh
     e.preventDefault();
 
     //ensure input is not an empty string
     if (str === "") {
+      console.log("P")
       setEmpty(true);
       return; //if string is empty do not add to array
     }
@@ -42,7 +45,7 @@ const UserInput = () => {
     
 
     //check to see if input is unique
-    if (substringArr.includes(str)) {
+    if (substrings.includes(str)) {
       setUnique(false); //if not unique do not add to array
       return;
     }
@@ -54,6 +57,7 @@ const UserInput = () => {
     setSubstrings([...substrings, str]);
     substringArr.push(str)
     console.log(substringArr);
+    console.log(str);
   }
 
 
@@ -75,39 +79,42 @@ const UserInput = () => {
     div.remove();
   }
 
-  function keyPress(event) {
-    return (event.charCode > 64 && event.charCode < 91) || (event.charCode > 96 && event.charCode < 123)
-  }
-
   return (
     <div className="inputArea">
       <div className='flex'>
         <form className="substringForm">
           <label>Enter Substrings </label>
-          <input type="text" onChange={getData} onKeyPress = {keyPress} />
+          <input type="text" onChange={getData} />
           <button type="inputButton" onClick={handleSubmit}>
             Add
           </button>
         </form>
 
-        <MainStringInput setMainstring={setMainstring}/>
+        <div className='mainInputArea'>
+          <MainStringInput setMainstring={setMainstring}/>
+        </div>
       </div>
-
+      {substrings.length === 0 && <div className='emptySub'>Input a substring to visualize, cant visualize on empty strings</div>}
       <EmptyString showError = {empty}/>
       <StringsUnique  divVisible ={unique}/> 
 
       {/* map the substring array to show users what substrings they have already inputted */}
       <div className="substrings"> 
-        {substrings.map((string, index) => (
-          <h1 className="substringText" key={string}>
-            {string}{" "}
-            <button type="button" onClick={() => deleteWord(string)}>
-              X
-            </button>
-          </h1>
-        ))}
+        <div className='substringsText'>
+          {substrings.map((string, index) => (
+            <h1 className="substringText" key={string}>
+              {string}{" "}
+              <button type="button" onClick={() => deleteWord(string)}>
+                X
+              </button>
+            </h1>
+          ))}
+        </div>
+        <h1 className='mainInput'>{mainstring}</h1>
       </div>
-      <Automaton mainstring={mainstring} substrings={substrings}/>
+      <div>   
+        {substrings.length !== 0 && <TrieVisual mainstring={mainstring} substrings={substrings}/>}
+      </div>
     </div>
   );
 };
