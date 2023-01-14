@@ -11,31 +11,46 @@ const TrieVisual = ({substrings, mainstring}) => {
     var trie = buildTrie(substrings, wordFound, nodeStrings);
     var trieData = convertData(trie, 0, nodeStrings); //wordfound  //nodeStrings)
     var failureLinks = buildFailureEdges(nodeStrings);
+    var dictLinks = buildDictionaryLinks(trie, failureLinks, wordFound);
 
 
     const svgRef = useRef();
     const wrapperRef = useRef();
     const dimensions = useResizeObserver(wrapperRef);
 
-    function findPosition(rootDescendants, name, rootPos) {
+    function findPosition(rootDescendants, name, rootPos, offset) {
+        let shift = 0;
+        if (offset) shift = 12;
         if (name === "Root") {
             return [rootPos]
         }
         for (let i = 1; i < rootDescendants.length; i++) {
             if (rootDescendants[i].data.name === name) {
-                return [rootDescendants[i].x, rootDescendants[i].y];
+                return [rootDescendants[i].x + shift, rootDescendants[i].y + shift];
             }
         }
     }
 
 
-    function convertLinks(rootDescendants, dictLinks, nodeStrings, root) {
+    function convertFailLinks(rootDescendants, failLinks, nodeStrings, root) {
         let convertedLinks = [];
         let interimObj = {};
-        for (let i = 0; i < Object.keys(dictLinks).length; i++) {
+        for (let i = 0; i < Object.keys(failLinks).length; i++) {
             interimObj={}
-            interimObj.source = findPosition(rootDescendants, nodeStrings[i], [root.x, root.y]);
-            interimObj.target = findPosition(rootDescendants, nodeStrings[dictLinks[i]], [root.x, root.y]);
+            interimObj.source = findPosition(rootDescendants, nodeStrings[i], [root.x, root.y], false);
+            interimObj.target = findPosition(rootDescendants, nodeStrings[failLinks[i]], [root.x+15, root.y+15], false);
+            convertedLinks.push(interimObj);
+        }
+        return convertedLinks;
+    }
+
+    function convertDictLinks(rootDescendants, dictLinks, nodeStrings, root) {
+        let convertedLinks = [];
+        let interimObj = {};
+        for (let link in dictLinks) {
+            interimObj={}
+            interimObj.source = findPosition(rootDescendants, nodeStrings[link], [root.x, root.y], true);
+            interimObj.target = findPosition(rootDescendants, nodeStrings[dictLinks[link]], [root.x, root.y], true);
             convertedLinks.push(interimObj);
         }
         return convertedLinks;
@@ -49,7 +64,12 @@ const TrieVisual = ({substrings, mainstring}) => {
         treeLayout(root);
 
         console.log(findPosition(root.descendants(), "hers"))
-        let failLinksd3 = convertLinks(root.descendants(), failureLinks, nodeStrings, root);
+        let failLinksd3 = convertFailLinks(root.descendants(), failureLinks, nodeStrings, root);
+        let dictLinksd3 = convertDictLinks(root.descendants(), dictLinks, nodeStrings, root);
+
+        console.log(dictLinks)
+        console.log(nodeStrings[7] + " " + nodeStrings[2])
+        console.log(dictLinksd3)
         console.log(failLinksd3);
         console.log(root)
 
@@ -69,6 +89,7 @@ const TrieVisual = ({substrings, mainstring}) => {
 
         const createLink = linkVertical().x(node => node.x).y(node => node.y);
         var linkGen = linkVertical();
+        var dictLinkGen = linkVertical();
  
 
         svg
@@ -78,9 +99,29 @@ const TrieVisual = ({substrings, mainstring}) => {
             .attr("class", "link")
             .attr("fill", "none")
             .attr("stroke", "black")
-            .attr("d", createLink)
-        
+            .attr("d", createLink);
 
+
+            
+        svg
+            .selectAll(".path")
+            .data(failLinksd3)
+            .join("path")
+            .attr("class", "path")
+            .attr("d", linkGen)
+            .attr("fill", "none")
+            .attr("stroke", "red");
+            // .attr("marker-mid", "url(#mid)");
+
+        svg
+            .selectAll(".dict")
+            .data(dictLinksd3)
+            .join("path")
+            .attr("class", "dict")
+            .attr("d", dictLinkGen)
+            .attr("fill", "none")
+            .attr("stroke", "blue");
+            // .attr("marker-mid", "url(#mid)");
 
 
 
@@ -94,15 +135,7 @@ const TrieVisual = ({substrings, mainstring}) => {
             .attr("cx", node => node.x)
             .attr("cy", node => node.y);
 
-        svg
-            .selectAll(".path")
-            .data(failLinksd3)
-            .join("path")
-            .attr("class", "path")
-            .attr("d", linkGen)
-            .attr("fill", "none")
-            .attr("stroke", "red");
-            // .attr("marker-mid", "url(#mid)");
+    
 
         svg
             .selectAll(".label")
@@ -126,7 +159,7 @@ const TrieVisual = ({substrings, mainstring}) => {
     return(
         <div>
             <button className="visualizeButton" onClick={visualize}>Search and Visualize!</button>
-            <h1 className='legend'>Red Links denote Failure Links <br/> Nodes with no failure link link back to root node</h1>
+            <h1 className='legend'>Red Links denote Failure Links <br/>Blue Links denote Dictionary Links<br/> Nodes with no failure link link back to root node</h1>
             <div ref = {wrapperRef} style={{marginTop: "2rem", overflow:"visible"}} className="svgDiv" >
                 <svg ref={svgRef}>
                 </svg>
