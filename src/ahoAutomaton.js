@@ -4,7 +4,7 @@
 //wordFound: nodes at which words are found
 //nodeStrings, given a node look up its string representation
 export const buildTrie = (substrings, wordFound, nodeStrings) => {
-    nodeStrings[0] = "Root Node";
+    nodeStrings[0] = "Root";
     //sort array such that longer length words come first
     substrings.sort(function(a, b){return b.length - a.length}); 
 
@@ -85,7 +85,7 @@ export const buildFailureEdges = (nodeObj) => {
         }
 
         //nodes at depth of 1 have failure links to root node
-        if (nodeObj[node].length == 1) {
+        if (nodeObj[node].length === 1) {
             failureEdges[node] = 0;
             continue;
         }
@@ -174,8 +174,6 @@ export const convertData = (nodeObj, obj, nodeStrings) => {
     //console.log(hierarchObj);
     return hierarchObj;
     }
-
-
 
 
 
