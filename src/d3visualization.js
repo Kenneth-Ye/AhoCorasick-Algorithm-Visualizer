@@ -1,5 +1,5 @@
-import { useRef, useEffect} from 'react';
-import { select, hierarchy, tree, linkVertical, schemeBrBG} from 'd3';
+import { useRef, useEffect, useState} from 'react';
+import { select, hierarchy, tree, linkVertical, schemeBrBG, svg} from 'd3';
 import useResizeObserver from './useResizeObserver';
 import {convertData, buildTrie, buildDictionaryLinks, buildFailureEdges} from './ahoAutomaton';
 import './App.css'
@@ -12,11 +12,13 @@ const TrieVisual = ({substrings, mainstring}) => {
     var trieData = convertData(trie, 0, nodeStrings); //wordfound  //nodeStrings)
     var failureLinks = buildFailureEdges(nodeStrings);
     var dictLinks = buildDictionaryLinks(trie, failureLinks, wordFound);
+    let tempword = "Substrings Found: ";
 
 
     const svgRef = useRef();
     const wrapperRef = useRef();
     const dimensions = useResizeObserver(wrapperRef);
+    const [foundWords, setFoundWords] = useState("Substrings Found: ");
 
     function findPosition(rootDescendants, name, rootPos, offset) {
         let shift = 0;
@@ -56,11 +58,16 @@ const TrieVisual = ({substrings, mainstring}) => {
         return convertedLinks;
     }
 
+    let root;
+    let treeLayout;
+    let svg;
     useEffect(() => {
-        const svg = select(svgRef.current);
+        tempword = "Substrings Found: ";
+        setFoundWords("Substrings Found: ");
+        svg = select(svgRef.current);
         if (!dimensions) return;
-        const root = hierarchy(trieData);
-        const treeLayout = tree().size([dimensions.width/1.3, dimensions.height*4]);
+        root = hierarchy(trieData);
+        treeLayout = tree().size([dimensions.width/1.3, dimensions.height*4]);
         treeLayout(root);
 
         console.log(findPosition(root.descendants(), "hers"))
@@ -148,18 +155,80 @@ const TrieVisual = ({substrings, mainstring}) => {
             .attr("x", node => node.x)
             .attr("y", node=> node.y);
 
+        svg.select("Root").attr("fill", "red");
 
  
-    }, [trieData, dimensions, substrings]);
+    }, [dimensions, substrings, mainstring]);
 
-    function visualize() {
+    function childNodeSuccess(char, childObj) {
+        console.log(childObj)
+        for (let node in childObj) {
+            if (char === node.charAt(node.length - 1)) {
+                return childObj[node];
+            }
+        }
+        return -1
+    }
+
     
+    function visualize(e) {
+        e.preventDefault();
+
+
+        let currNode = 0;
+        let currChar;
+        console.log(wordFound);
+        console.log(trie);
+        let nextNode;
+        for (let i = 0; i < mainstring.length + 1; i++) {
+            if (i < mainstring.length) currChar = mainstring[i];
+            console.log(currChar);
+            nextNode = childNodeSuccess(currChar, trie[currNode]);
+            console.log(currNode)
+            console.log(nextNode);
+
+            //if it has a dictionary link
+            if (currNode in dictLinks && nextNode !== -1) {
+                tempword =  tempword + wordFound[dictLinks[currNode]] + " "
+                setFoundWords(tempword);
+                console.log(tempword)
+            }
+
+            //if its a word node
+            if (currNode in wordFound) {
+                tempword =  tempword + wordFound[currNode] + " "
+                setFoundWords(tempword);
+                console.log(tempword)
+
+                if (Object.keys(trie[currNode]).length === 0) {
+                    currNode = failureLinks[currNode];
+                    nextNode= childNodeSuccess(currChar, trie[currNode]);
+                }
+            }
+
+
+            console.log(nextNode !== -1)
+            //success
+            if (nextNode !== -1) {
+                currNode=nextNode
+                continue;
+            }
+
+            //failure
+            currNode = failureLinks[currNode];
+            if (currNode !== 0) {
+                i--;
+            }
+            console.log(currNode)
+        }
+
     }
 
     return(
         <div>
             <button className="visualizeButton" onClick={visualize}>Search and Visualize!</button>
             <h1 className='legend'>Red Links denote Failure Links <br/>Blue Links denote Dictionary Links<br/> Nodes with no failure link link back to root node</h1>
+            <h1 className="foundWordDisplay">{foundWords}</h1>
             <div ref = {wrapperRef} style={{marginTop: "2rem", overflow:"visible"}} className="svgDiv" >
                 <svg ref={svgRef}>
                 </svg>
@@ -169,4 +238,6 @@ const TrieVisual = ({substrings, mainstring}) => {
 }
 
 export default TrieVisual;
+
+
 
