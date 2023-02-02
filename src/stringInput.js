@@ -9,16 +9,14 @@ import StringsUnique from './stringsUnique';
 import EmptyString from './emptyStringError';
 
 
- let substringArr=["main", "string", "ring", "aim"]; //substring array var
-//let substringArr=["she","hers","his","he"];
-
 const UserInput = () => {
 
   //hooks
-  const [substrings, setSubstrings] = useState(["she","hers","his","he"]);
+  //a, ab, bab, bc, bca, c, caa
+  const [substrings, setSubstrings] = useState(["a","ab","bab","bc", "bca", "c", "caa"]);
   const [unique, setUnique] = useState(true);
   const [empty, setEmpty] = useState(false);
-  const [mainstring, setMainstring] = useState("Mainstring");
+  const [mainstring, setMainstring] = useState("abccab");
   const [str, setStr] = useState("");
 
   function getData(event) {
@@ -55,8 +53,6 @@ const UserInput = () => {
 
     //add the string to the list of substrings
     setSubstrings([...substrings, str]);
-    substringArr.push(str)
-    console.log(substringArr);
     console.log(str);
   }
 
@@ -69,7 +65,6 @@ const UserInput = () => {
 
     // remove the word from the array
     substrings.splice(index, 1);
-    substringArr.splice(index, 1);
 
     // update the state with the new array
     setSubstrings([...substrings]);
