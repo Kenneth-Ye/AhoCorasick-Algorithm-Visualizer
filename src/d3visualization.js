@@ -13,6 +13,7 @@ const TrieVisual = ({substrings, mainstring}) => {
     var failureLinks = buildFailureEdges(nodeStrings);
     var dictLinks = buildDictionaryLinks(trie, failureLinks, wordFound);
     let tempword = "Substrings Found: ";
+    var temp = false;
 
 
     const svgRef = useRef();
@@ -67,11 +68,14 @@ const TrieVisual = ({substrings, mainstring}) => {
 
     let root;
     let treeLayout;
-    let svg;
+    console.log("svg undef")
+    let svg = select(svgRef.current);
+    
     useEffect(() => {
         tempword = "Substrings Found: ";
         setFoundWords("Substrings Found: ");
         svg = select(svgRef.current);
+        console.log("svg init")
         if (!dimensions) return;
         root = hierarchy(trieData);
         treeLayout = tree().size([dimensions.width/1.3, dimensions.height*4]);
@@ -178,7 +182,7 @@ const TrieVisual = ({substrings, mainstring}) => {
         
 
  
-    }, [dimensions, substrings, mainstring]);
+    }, [dimensions, substrings, mainstring, temp]);
 
     function childNodeSuccess(char, childObj) {
         console.log(childObj)
@@ -191,10 +195,12 @@ const TrieVisual = ({substrings, mainstring}) => {
     }
 
     
-    function visualize(e) {
+    async function visualize(e) {
         e.preventDefault();
 
 
+        setFoundWords("Substrings Found: ");
+        tempword = "Substrings Found: ";
 
         let currNode = 0;
         let currChar;
@@ -202,7 +208,9 @@ const TrieVisual = ({substrings, mainstring}) => {
         console.log(wordFound);
         console.log(trie);
         let nextNode;
-        let success = false;
+        let tempCurrNode;
+        // let success = false;
+        const delay = 250;
 
         for (let i = 0; i < mainstring.length + 1; i++) {
             // setTimeout(()=> {
@@ -211,20 +219,34 @@ const TrieVisual = ({substrings, mainstring}) => {
             if (i < mainstring.length) currChar = mainstring[i];
 
             //log current character we are on
-            console.log(currChar);
 
+            console.log(currChar);
+            console.log(i)
 
             //determine a child node match
             nextNode = childNodeSuccess(currChar, trie[currNode]);
             console.log(currNode)
             console.log(nextNode);
-
-            svg.select('#kc' + currNode.toString()).style('fill','red');
+            try {
+                svg.selectAll('.node').style('fill','#7077fa')
+                svg.select('#kc' + currNode.toString()).style('fill','red');
+            } catch(e) {
+                console.log(e);
+            }
+            await new Promise((resolve) => setTimeout(resolve, delay));
 
             //if it has a dictionary link
             if (currNode in dictLinks && nextNode !== -1) {
+                tempCurrNode = currNode
                 tempword =  tempword + wordFound[dictLinks[currNode]] + " "
                 setFoundWords(tempword);
+                tempCurrNode = dictLinks[tempCurrNode]
+                //check if dict link node has more a dict link itself
+                while (tempCurrNode in dictLinks) {
+                    tempword =  tempword + wordFound[dictLinks[tempCurrNode]] + " "
+                    tempCurrNode = dictLinks[tempCurrNode]
+                    setFoundWords(tempword);
+                }
                 console.log(tempword)
             }
 
@@ -234,16 +256,22 @@ const TrieVisual = ({substrings, mainstring}) => {
                 setFoundWords(tempword);
                 console.log(tempword)
 
+                await new Promise((resolve) => setTimeout(resolve, delay));
                 if (Object.keys(trie[currNode]).length === 0) {
                     currNode = failureLinks[currNode];
                     nextNode= childNodeSuccess(currChar, trie[currNode]);
+                    i--
+                    continue;
                 }
             }
 
 
             if (i === mainstring.length && nextNode in wordFound) {
-                tempword =  tempword + wordFound[nextNode] + " "
-                setFoundWords(tempword);
+                // tempword =  tempword + wordFound[nextNode] + " "
+                // svg.select('#kc' + currNode.toString()).style('fill','red');
+                // setFoundWords(tempword);
+                currNode = nextNode
+                i--;
             }
 
 
@@ -273,13 +301,16 @@ const TrieVisual = ({substrings, mainstring}) => {
             console.log(currNode)
         // }, 2000);
         }
+        await new Promise((resolve) => setTimeout(resolve, 2000));
         console.log(nodeStrings)
+        svg.selectAll('.node').style('fill','#7077fa')
+        temp = !temp
     }
 
     return(
         <div>
             <button className="visualizeButton" onClick={visualize}>Search and Visualize!</button>
-            <h1 className='legend'>Red Links denote Failure Links <br/>Blue Links denote Dictionary Links<br/> Nodes with no failure link link back to root node</h1>
+            <h1 className='legend'>Red Links denote Failure Links and Blue Links denote Dictionary Links<br/> Nodes with no failure link, link back to root node</h1>
             <h1 className="foundWordDisplay">{foundWords}</h1>
             <div ref = {wrapperRef} style={{marginTop: "2rem", overflow:"visible"}} className="svgDiv" >
                 <svg ref={svgRef}>
@@ -290,5 +321,6 @@ const TrieVisual = ({substrings, mainstring}) => {
 }
 
 export default TrieVisual;
+
 
 
