@@ -32,6 +32,13 @@ const TrieVisual = ({substrings, mainstring}) => {
             }
         }
     }
+    function inverse(obj, target){
+        for (let node in obj){
+            if (obj[node] === target) {
+            return node;
+            }
+        }
+    }
 
 
     function convertFailLinks(rootDescendants, failLinks, nodeStrings, root) {
@@ -155,7 +162,20 @@ const TrieVisual = ({substrings, mainstring}) => {
             .attr("x", node => node.x)
             .attr("y", node=> node.y);
 
-        svg.select("Root").attr("fill", "red");
+        // svg.select("Root").attr("fill", "red");
+        //https://www.sitepoint.com/community/t/family-tree-how-can-i-add-attribute-id-to-each-node/352754/4
+        //m_hutley
+
+        //d.data.name --> name of the node d --> nodeStrings ---> nodenumber --> use as id
+        svg.selectAll('.node').attr("id",function(d) { 
+            console.log(typeof inverse(nodeStrings, d.data.name).toString())
+            return "kc" + inverse(nodeStrings, d.data.name).toString(); 
+        });
+        svg.selectAll('.node').each(function(d) {
+            console.log(this); // Logs the element attached to d.
+          });
+
+        
 
  
     }, [dimensions, substrings, mainstring]);
@@ -175,17 +195,31 @@ const TrieVisual = ({substrings, mainstring}) => {
         e.preventDefault();
 
 
+
         let currNode = 0;
         let currChar;
+        let failedRoot = false;
         console.log(wordFound);
         console.log(trie);
         let nextNode;
+        let success = false;
+
         for (let i = 0; i < mainstring.length + 1; i++) {
+            // setTimeout(()=> {
+
+            //catch out of bounds error
             if (i < mainstring.length) currChar = mainstring[i];
+
+            //log current character we are on
             console.log(currChar);
+
+
+            //determine a child node match
             nextNode = childNodeSuccess(currChar, trie[currNode]);
             console.log(currNode)
             console.log(nextNode);
+
+            svg.select('#kc' + currNode.toString()).style('fill','red');
 
             //if it has a dictionary link
             if (currNode in dictLinks && nextNode !== -1) {
@@ -207,21 +241,39 @@ const TrieVisual = ({substrings, mainstring}) => {
             }
 
 
+            if (i === mainstring.length && nextNode in wordFound) {
+                tempword =  tempword + wordFound[nextNode] + " "
+                setFoundWords(tempword);
+            }
+
+
             console.log(nextNode !== -1)
             //success
             if (nextNode !== -1) {
                 currNode=nextNode
                 continue;
+                // success = true
             }
 
-            //failure
+            // if (!success) {
+                //failure
+            if (!failedRoot) {
+                i--
+            }
+
             currNode = failureLinks[currNode];
-            if (currNode !== 0) {
-                i--;
+            if (currNode == 0) {
+                failedRoot = true
             }
+            else{
+                failedRoot = false;
+            }
+            // }
+            
             console.log(currNode)
+        // }, 2000);
         }
-
+        console.log(nodeStrings)
     }
 
     return(
@@ -238,6 +290,5 @@ const TrieVisual = ({substrings, mainstring}) => {
 }
 
 export default TrieVisual;
-
 
 
