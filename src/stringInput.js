@@ -31,6 +31,8 @@ const UserInput = () => {
     //prevent refresh
     e.preventDefault();
 
+    //refuse word "Root" confuses with root node
+
     //ensure input is not an empty string
     if (str === "") {
       console.log("P")
