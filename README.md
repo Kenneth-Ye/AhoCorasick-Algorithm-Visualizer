@@ -9,4 +9,4 @@ You can edit the patterns (substrings) to be searched for in the top left. You c
 ## Demo Video
 
 ## License
-
+[MIT](https://choosealicense.com/licenses/mit/)
