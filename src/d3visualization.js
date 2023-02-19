@@ -7,7 +7,7 @@ import './App.css'
 const TrieVisual = ({substrings, mainstring}) => {
     var nodeStrings = {};
     var wordFound = {};
-    
+       
     var trie = buildTrie(substrings, wordFound, nodeStrings);
     var trieData = convertData(trie, 0, nodeStrings); //wordfound  //nodeStrings)
     var failureLinks = buildFailureEdges(nodeStrings);
@@ -20,6 +20,9 @@ const TrieVisual = ({substrings, mainstring}) => {
     const wrapperRef = useRef();
     const dimensions = useResizeObserver(wrapperRef);
     const [foundWords, setFoundWords] = useState("Substrings Found: ");
+    const [firstStr, setFirstStr] = useState(mainstring);
+    const [spanStr, setSpanStr] = useState("");
+    const [endStr, setEndStr] = useState("");
 
     function findPosition(rootDescendants, name, rootPos, offset) {
         let shift = 0;
@@ -197,7 +200,8 @@ const TrieVisual = ({substrings, mainstring}) => {
     
     async function visualize(e) {
         e.preventDefault();
-
+        //autoscroll
+        document.getElementById( 'vis' ).scrollIntoView({block: "start", inline: "nearest", behavior:"smooth"})
 
         setFoundWords("Substrings Found: ");
         tempword = "Substrings Found: ";
@@ -222,6 +226,14 @@ const TrieVisual = ({substrings, mainstring}) => {
 
             console.log(currChar);
             console.log(i)
+            if (i === mainstring.length) {
+                setFirstStr(mainstring.slice(0, i-1))
+            }
+            else {
+                setFirstStr(mainstring.slice(0, i)) 
+            }
+            setSpanStr(currChar)
+            setEndStr(mainstring.slice(i+1, mainstring.length))
 
             //determine a child node match
             nextNode = childNodeSuccess(currChar, trie[currNode]);
@@ -301,7 +313,7 @@ const TrieVisual = ({substrings, mainstring}) => {
             console.log(currNode)
         // }, 2000);
         }
-        await new Promise((resolve) => setTimeout(resolve, 2000));
+        await new Promise((resolve) => setTimeout(resolve, 1000));
         console.log(nodeStrings)
         svg.selectAll('.node').style('fill','#7077fa')
         temp = !temp
@@ -311,7 +323,8 @@ const TrieVisual = ({substrings, mainstring}) => {
         <div>
             <button className="visualizeButton" onClick={visualize}>Search and Visualize!</button>
             <h1 className='legend'>Red Links denote Failure Links and Blue Links denote Dictionary Links<br/> Nodes with no failure link, link back to root node</h1>
-            <h1 className="foundWordDisplay">{foundWords}</h1>
+            <h1 className="foundWordDisplay" id="vis">{foundWords}</h1>
+            <h1 className='colorWord'>{firstStr}<span className='span'style={{color:"red"}}>{spanStr}</span>{endStr}</h1>
             <div ref = {wrapperRef} style={{marginTop: "2rem", overflow:"visible"}} className="svgDiv" >
                 <svg ref={svgRef}>
                 </svg>
@@ -321,6 +334,8 @@ const TrieVisual = ({substrings, mainstring}) => {
 }
 
 export default TrieVisual;
+
+
 
 
 
