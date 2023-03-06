@@ -5,17 +5,24 @@ import {convertData, buildTrie, buildDictionaryLinks, buildFailureEdges} from '.
 import './App.css'
 
 const TrieVisual = ({substrings, mainstring}) => {
+    //dict of string represented by each node 
     var nodeStrings = {};
+
+    //nodes that are wordnodes
     var wordFound = {};
        
+    //build the node structure
     var trie = buildTrie(substrings, wordFound, nodeStrings);
+
+    //convert to JSON form for d3 to visualize
     var trieData = convertData(trie, 0, nodeStrings); //wordfound  //nodeStrings)
-    var failureLinks = buildFailureEdges(nodeStrings);
-    var dictLinks = buildDictionaryLinks(trie, failureLinks, wordFound);
-    let tempword = "Substrings Found: ";
+    var failureLinks = buildFailureEdges(nodeStrings); //failure links between nodes
+    var dictLinks = buildDictionaryLinks(trie, failureLinks, wordFound); //dictionary links between nodes
+    let tempword = "Substrings Found: "; 
     var temp = false;
 
 
+    //hooks
     const svgRef = useRef();
     const wrapperRef = useRef();
     const dimensions = useResizeObserver(wrapperRef);
@@ -24,6 +31,7 @@ const TrieVisual = ({substrings, mainstring}) => {
     const [spanStr, setSpanStr] = useState("");
     const [endStr, setEndStr] = useState("");
 
+    //searches through the whole trie to find the poisition of a certain node
     function findPosition(rootDescendants, name, rootPos, offset) {
         let shift = 0;
         if (offset) shift = 12;
@@ -45,11 +53,13 @@ const TrieVisual = ({substrings, mainstring}) => {
     }
 
 
+    //converts the failure links into proper format for d3 to draw
     function convertFailLinks(rootDescendants, failLinks, nodeStrings, root) {
-        let convertedLinks = [];
-        let interimObj = {};
+        let convertedLinks = []; //array to hold the current links
+        let interimObj = {}; //holder object
         for (let i = 0; i < Object.keys(failLinks).length; i++) {
             interimObj={}
+            //add source/target nodes position as an array to the object with specified key
             interimObj.source = findPosition(rootDescendants, nodeStrings[i], [root.x, root.y], false);
             interimObj.target = findPosition(rootDescendants, nodeStrings[failLinks[i]], [root.x+15, root.y+15], false);
             convertedLinks.push(interimObj);
@@ -57,13 +67,19 @@ const TrieVisual = ({substrings, mainstring}) => {
         return convertedLinks;
     }
 
+    //converts the dictionary links into proper format for d3 to draw
     function convertDictLinks(rootDescendants, dictLinks, nodeStrings, root) {
         let convertedLinks = [];
         let interimObj = {};
+
+        //for each dictionary link 
         for (let link in dictLinks) {
             interimObj={}
+
+            //find the position of the source and target nodes 
             interimObj.source = findPosition(rootDescendants, nodeStrings[link], [root.x, root.y], true);
             interimObj.target = findPosition(rootDescendants, nodeStrings[dictLinks[link]], [root.x, root.y], true);
+            //push an object with source and target x y coordinates to the converted object
             convertedLinks.push(interimObj);
         }
         return convertedLinks;
@@ -71,16 +87,18 @@ const TrieVisual = ({substrings, mainstring}) => {
 
     let root;
     let treeLayout;
-    console.log("svg undef")
     let svg = select(svgRef.current);
     
     useEffect(() => {
         tempword = "Substrings Found: ";
         setFoundWords("Substrings Found: ");
         svg = select(svgRef.current);
-        console.log("svg init")
+
+        //catch null dimensions
         if (!dimensions) return;
         root = hierarchy(trieData);
+
+        //set dimensions of d3 tree layout 
         treeLayout = tree().size([dimensions.width/1.3, dimensions.height*4]);
         treeLayout(root);
 
@@ -93,6 +111,7 @@ const TrieVisual = ({substrings, mainstring}) => {
         console.log(dictLinksd3)
         console.log(failLinksd3);
         console.log(root)
+        console.log(wordFound)
 
         // svg.append("svg:defs").selectAll("marker")
         //     .data(["mid"])      // Different link/path types can be defined here
@@ -108,7 +127,10 @@ const TrieVisual = ({substrings, mainstring}) => {
         //     .attr("d", "M0,-5L10,0L0,5");
 
 
+        //link all the nodes
         const createLink = linkVertical().x(node => node.x).y(node => node.y);
+
+        //link generator for the trie and failure links 
         var linkGen = linkVertical();
         var dictLinkGen = linkVertical();
  
@@ -124,6 +146,7 @@ const TrieVisual = ({substrings, mainstring}) => {
 
 
             
+        //draw paths between nodes for failure links
         svg
             .selectAll(".path")
             .data(failLinksd3)
@@ -134,6 +157,7 @@ const TrieVisual = ({substrings, mainstring}) => {
             .attr("stroke", "red");
             // .attr("marker-mid", "url(#mid)");
 
+        //draw paths between nodes for dictionary links
         svg
             .selectAll(".dict")
             .data(dictLinksd3)
@@ -157,7 +181,7 @@ const TrieVisual = ({substrings, mainstring}) => {
             .attr("cy", node => node.y);
 
     
-
+        //draw labels for nodes
         svg
             .selectAll(".label")
             .data(root.descendants())
@@ -169,27 +193,36 @@ const TrieVisual = ({substrings, mainstring}) => {
             .attr("x", node => node.x)
             .attr("y", node=> node.y);
 
-        // svg.select("Root").attr("fill", "red");
-        //https://www.sitepoint.com/community/t/family-tree-how-can-i-add-attribute-id-to-each-node/352754/4
-        //m_hutley
+  
 
         //d.data.name --> name of the node d --> nodeStrings ---> nodenumber --> use as id
+        //create unique id for each node
+        // id = kc + node number (i.e. kc4)
         svg.selectAll('.node').attr("id",function(d) { 
             console.log(typeof inverse(nodeStrings, d.data.name).toString())
             return "kc" + inverse(nodeStrings, d.data.name).toString(); 
         });
+        //print to console for test
         svg.selectAll('.node').each(function(d) {
             console.log(this); // Logs the element attached to d.
           });
+
+        // for (let key in wordFound){
+        //     svg.select('#kc' + key.toString()).style('fill','#9f91ff');
+        // }
 
         
 
  
     }, [dimensions, substrings, mainstring, temp]);
 
+    //see if algorithm fails at a node
+    //returns -1 if node fails and a node number to move to if successful
     function childNodeSuccess(char, childObj) {
         console.log(childObj)
+        //for each childnode of the curr node
         for (let node in childObj) {
+            //if the char matches a child node return that node number
             if (char === node.charAt(node.length - 1)) {
                 return childObj[node];
             }
@@ -202,7 +235,11 @@ const TrieVisual = ({substrings, mainstring}) => {
         e.preventDefault();
         //autoscroll
         document.getElementById( 'vis' ).scrollIntoView({block: "start", inline: "nearest", behavior:"smooth"})
+        
+        //delay
+        await new Promise((resolve) => setTimeout(resolve, 400));
 
+        //foundwords label
         setFoundWords("Substrings Found: ");
         tempword = "Substrings Found: ";
 
@@ -223,9 +260,10 @@ const TrieVisual = ({substrings, mainstring}) => {
             if (i < mainstring.length) currChar = mainstring[i];
 
             //log current character we are on
-
             console.log(currChar);
             console.log(i)
+
+            //slice the mainstring to use in html spans to highlight current char we are on
             if (i === mainstring.length) {
                 setFirstStr(mainstring.slice(0, i-1))
             }
@@ -283,13 +321,15 @@ const TrieVisual = ({substrings, mainstring}) => {
                 // svg.select('#kc' + currNode.toString()).style('fill','red');
                 // setFoundWords(tempword);
                 currNode = nextNode
-                i--;
+                // i--;
+                //line above maybe?
             }
 
 
             console.log(nextNode !== -1)
             //success
             if (nextNode !== -1) {
+                failedRoot=false
                 currNode=nextNode
                 continue;
                 // success = true
@@ -297,6 +337,7 @@ const TrieVisual = ({substrings, mainstring}) => {
 
             // if (!success) {
                 //failure
+            console.log(failedRoot)
             if (!failedRoot) {
                 i--
             }
@@ -334,6 +375,8 @@ const TrieVisual = ({substrings, mainstring}) => {
 }
 
 export default TrieVisual;
+
+
 
 
 
