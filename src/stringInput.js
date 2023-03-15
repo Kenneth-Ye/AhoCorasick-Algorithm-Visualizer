@@ -3,6 +3,7 @@ import React from 'react';
 import './App.css';
 import MainStringInput from './mainStringAlgo';
 import TrieVisual from './d3visualization';
+import RootString from './rootError';
 
 //components that warn user if string entered is not unique or empty
 import StringsUnique from './stringsUnique';
@@ -18,6 +19,7 @@ const UserInput = () => {
   const [empty, setEmpty] = useState(false);
   const [mainstring, setMainstring] = useState("abccab");
   const [str, setStr] = useState("");
+  const [root, setRoot] = useState(false);
 
   function getData(event) {
     //update the str hook as user types into the field
@@ -42,8 +44,15 @@ const UserInput = () => {
     else {
       setEmpty(false);
     }
-    
 
+    if (str === "Root") {
+      setRoot(true);
+      return;
+    }
+    else{
+      setRoot(false);
+    }
+    
     //check to see if input is unique
     if (substrings.includes(str)) {
       setUnique(false); //if not unique do not add to array
@@ -94,6 +103,7 @@ const UserInput = () => {
       {substrings.length === 0 && <div className='emptySub'>Input a substring to visualize, cant visualize on empty strings</div>}
       <EmptyString showError = {empty}/>
       <StringsUnique  divVisible ={unique}/> 
+      <RootString showError = {root}></RootString>
 
       {/* map the substring array to show users what substrings they have already inputted */}
       <div className="substrings"> 
@@ -117,3 +127,4 @@ const UserInput = () => {
 };
 
 export default UserInput;
+
