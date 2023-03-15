@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/AhoCorasick-Algorithm-Visualizer/static/css/main.bd9422f4.css",
-    "main.js": "/AhoCorasick-Algorithm-Visualizer/static/js/main.53959ed4.js",
+    "main.css": "/AhoCorasick-Algorithm-Visualizer/static/css/main.c7c28b36.css",
+    "main.js": "/AhoCorasick-Algorithm-Visualizer/static/js/main.945aa92d.js",
     "static/js/787.35bc8beb.chunk.js": "/AhoCorasick-Algorithm-Visualizer/static/js/787.35bc8beb.chunk.js",
     "index.html": "/AhoCorasick-Algorithm-Visualizer/index.html",
-    "main.bd9422f4.css.map": "/AhoCorasick-Algorithm-Visualizer/static/css/main.bd9422f4.css.map",
-    "main.53959ed4.js.map": "/AhoCorasick-Algorithm-Visualizer/static/js/main.53959ed4.js.map",
+    "main.c7c28b36.css.map": "/AhoCorasick-Algorithm-Visualizer/static/css/main.c7c28b36.css.map",
+    "main.945aa92d.js.map": "/AhoCorasick-Algorithm-Visualizer/static/js/main.945aa92d.js.map",
     "787.35bc8beb.chunk.js.map": "/AhoCorasick-Algorithm-Visualizer/static/js/787.35bc8beb.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.bd9422f4.css",
-    "static/js/main.53959ed4.js"
+    "static/css/main.c7c28b36.css",
+    "static/js/main.945aa92d.js"
   ]
 }
