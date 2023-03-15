@@ -1,4 +1,4 @@
-//import resize observer component from github, not my code
+//import resize observer component from github
 //imported from https://github.com/muratkemaldar
 
 import ResizeObserver from "resize-observer-polyfill";
